@@ -127,79 +127,87 @@ CREATE TABLE IF NOT EXISTS channel_subscribers
     CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS channel_messages (
-    id BIGSERIAL PRIMARY KEY,
-    channel_id BIGINT NOT NULL,
-    sender_id BIGINT NOT NULL,
-    media_type MEDIA_TYPE NOT NULL,
-    body TEXT,
-    filename VARCHAR(100) NULL,
+CREATE TABLE IF NOT EXISTS channel_messages
+(
+    id         BIGSERIAL PRIMARY KEY,
+    channel_id BIGINT       NOT NULL,
+    sender_id  BIGINT       NOT NULL,
+    media_type MEDIA_TYPE   NOT NULL,
+    body       TEXT,
+    filename   VARCHAR(100) NULL,
     created_at TIMESTAMP DEFAULT NOW(),
 
-    CONSTRAINT fk_channel_messages_channel_id FOREIGN KEY (channel_id) REFERENCES channels(id),
-    CONSTRAINT fk_channel_messages_sender_id FOREIGN KEY (sender_id) REFERENCES users(id)
+    CONSTRAINT fk_channel_messages_channel_id FOREIGN KEY (channel_id) REFERENCES channels (id),
+    CONSTRAINT fk_channel_messages_sender_id FOREIGN KEY (sender_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS saved_messages (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    body TEXT,
+CREATE TABLE IF NOT EXISTS saved_messages
+(
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    body       TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
 
     CONSTRAINT saved_messages_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS reactions_list (
-    id BIGSERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS reactions_list
+(
+    id   BIGSERIAL PRIMARY KEY,
     code TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS private_message_reactions(
+CREATE TABLE IF NOT EXISTS private_message_reactions
+(
     reaction_id BIGINT NOT NULL,
-    message_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+    message_id  BIGINT NOT NULL,
+    user_id     BIGINT NOT NULL,
 
-    CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list(id),
-    CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES private_messages(id),
-    CONSTRAINT fk_private_message_reactions_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list (id),
+    CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES private_messages (id),
+    CONSTRAINT fk_private_message_reactions_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS channel_message_reactions(
+CREATE TABLE IF NOT EXISTS channel_message_reactions
+(
     reaction_id BIGINT NOT NULL,
-    message_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+    message_id  BIGINT NOT NULL,
+    user_id     BIGINT NOT NULL,
 
-    CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list(id),
-    CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES channel_messages(id),
-    CONSTRAINT fk_private_message_reactions_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list (id),
+    CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES channel_messages (id),
+    CONSTRAINT fk_private_message_reactions_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS group_message_reactions(
+CREATE TABLE IF NOT EXISTS group_message_reactions
+(
     reaction_id BIGINT NOT NULL,
-    message_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+    message_id  BIGINT NOT NULL,
+    user_id     BIGINT NOT NULL,
 
-    CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list(id),
-    CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES group_messages(id),
-    CONSTRAINT fk_private_message_reactions_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list (id),
+    CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES group_messages (id),
+    CONSTRAINT fk_private_message_reactions_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS stories (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    caption VARCHAR(140),
-    filename VARCHAR(100),
+CREATE TABLE IF NOT EXISTS stories
+(
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT NOT NULL,
+    caption     VARCHAR(140),
+    filename    VARCHAR(100),
     views_count INT,
-    created_at TIMESTAMP DEFAULT NOW(),
+    created_at  TIMESTAMP DEFAULT NOW(),
 
     CONSTRAINT fk_stories_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS stories_likes (
-    id BIGSERIAL PRIMARY KEY,
-    story_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+CREATE TABLE IF NOT EXISTS stories_likes
+(
+    id         BIGSERIAL PRIMARY KEY,
+    story_id   BIGINT NOT NULL,
+    user_id    BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT stories_likes_story_id FOREIGN KEY (story_id) REFERENCES stories(id),
-    CONSTRAINT stories_likes_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT stories_likes_story_id FOREIGN KEY (story_id) REFERENCES stories (id),
+    CONSTRAINT stories_likes_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
