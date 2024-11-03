@@ -6,10 +6,10 @@ CREATE TABLE IF NOT EXISTS users
     id            BIGSERIAL PRIMARY KEY,
     first_name    VARCHAR(100)        NOT NULL,
     last_name     VARCHAR(100)        NOT NULL,
-    login         VARCHAR(100)        NOT NULL,
+    login         VARCHAR(100) UNIQUE NOT NULL,
     email         VARCHAR(100) UNIQUE NOT NULL,
     hash_password VARCHAR(256)        NOT NULL,
-    phone_number  BIGINT UNIQUE       NOT NULL
+    phone_number  BIGINT       UNIQUE NOT NULL
 );
 
 CREATE INDEX username_index ON users (first_name, last_name);
@@ -17,7 +17,7 @@ COMMENT ON INDEX username_index IS 'users';
 
 CREATE TYPE COLOR_THEME AS ENUM ('classic', 'day', 'tinted', 'night');
 CREATE TYPE LANG AS ENUM ('english', 'french', 'russian', 'german', 'belorussian', 'croatian', 'dutch');
-CREATE TYPE MEDIA_TYPE AS ENUM ('video', 'message', 'image', 'audio');
+CREATE  TYPE MEDIA_TYPE AS ENUM ('video', 'message', 'image', 'audio', 'text');
 CREATE TYPE STATUS AS ENUM ('requested', 'joined', 'left');
 
 CREATE TABLE IF NOT EXISTS user_settings
