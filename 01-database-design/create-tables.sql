@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users
     id            BIGSERIAL PRIMARY KEY,
     first_name    VARCHAR(100)        NOT NULL,
     last_name     VARCHAR(100)        NOT NULL,
-    login         VARCHAR(100) UNIQUE NOT NULL,
+    login         VARCHAR(100) UNIQUE,
     email         VARCHAR(100) UNIQUE NOT NULL,
     hash_password VARCHAR(256)        NOT NULL,
     phone_number  BIGINT       UNIQUE NOT NULL
@@ -41,21 +41,22 @@ ALTER TABLE users
 ALTER TABLE users
     ALTER COLUMN birthday TYPE DATE,
     ALTER COLUMN birthday SET NOT NULL;
-ALTER TABLE users
-    RENAME COLUMN birthday to date_of_birth;
-ALTER TABLE users
-    DROP COLUMN date_of_birth;
+--ALTER TABLE users
+--    RENAME COLUMN birthday to date_of_birth;
+--ALTER TABLE users
+--    DROP COLUMN date_of_birth;
 
 CREATE TABLE IF NOT EXISTS private_messages
 (
     id          BIGSERIAL PRIMARY KEY,
     sender_id   BIGINT                  NOT NULL,
     receiver_id BIGINT                  NOT NULL,
-    media_type  MEDIA_TYPE              NOT NULL,
+    media_type  MEDIA_TYPE,
     body        TEXT,
     filename    VARCHAR(200)            NOT NULL,
     created_at  TIMESTAMP DEFAULT NOW() NOT NULL,
     reply_to_id BIGINT                  NULL,
+    is_read     BOOLEAN                 NOT NULL,
     CONSTRAINT fk_p_m_reply_to_id FOREIGN KEY (reply_to_id) REFERENCES private_messages (id),
     CONSTRAINT fk_p_m_sender_id FOREIGN KEY (sender_id) REFERENCES users (id),
     CONSTRAINT fk_p_m_receiver_id FOREIGN KEY (receiver_id) REFERENCES users (id)
@@ -67,7 +68,7 @@ CREATE TABLE IF NOT EXISTS groups
     title         VARCHAR(45)             NOT NULL,
     icon          VARCHAR(45)             NULL,
     invite_link   VARCHAR(100)            NOT NULL,
-    settings      JSON                    NOT NULL,
+    settings      JSON,
     owner_user_id BIGINT                  NOT NULL,
     is_private    BOOLEAN                 NOT NULL,
     created_at    TIMESTAMP DEFAULT NOW() NOT NULL,
@@ -107,7 +108,7 @@ CREATE TABLE IF NOT EXISTS channels
     title         VARCHAR(45)             NOT NULL,
     icon          VARCHAR(45)             NULL,
     invite_link   VARCHAR(45)             NOT NULL,
-    settings      JSON                    NOT NULL,
+    settings      JSON,
     owner_user_id BIGINT                  NOT NULL,
     is_private    BOOLEAN,
     created_ad    TIMESTAMP DEFAULT NOW() NOT NULL,
@@ -173,6 +174,7 @@ CREATE TABLE IF NOT EXISTS channel_message_reactions
     reaction_id BIGINT NOT NULL,
     message_id  BIGINT NOT NULL,
     user_id     BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
 
     CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list (id),
     CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES channel_messages (id),
@@ -184,6 +186,7 @@ CREATE TABLE IF NOT EXISTS group_message_reactions
     reaction_id BIGINT NOT NULL,
     message_id  BIGINT NOT NULL,
     user_id     BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
 
     CONSTRAINT fk_private_message_reactions_reaction_id FOREIGN KEY (reaction_id) REFERENCES reactions_list (id),
     CONSTRAINT fk_private_message_reactions_message_id FOREIGN KEY (message_id) REFERENCES group_messages (id),
