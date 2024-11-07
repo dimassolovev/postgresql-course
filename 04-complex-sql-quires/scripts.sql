@@ -184,7 +184,7 @@ WITH RECURSIVE message_replies (id, body, history) AS (
     UNION ALL
     SELECT gm2.id, gm2.body, CONCAT(mr.history, ' <-- ', gm2.id)
     FROM message_replies AS mr
-    JOIN group_messages AS gm2 ON mr.id = gm2.reply_to_id
+    INNER JOIN group_messages AS gm2 ON mr.id = gm2.reply_to_id
 )
 SELECT * FROM message_replies
 ORDER BY history;
